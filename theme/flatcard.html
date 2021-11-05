@@ -24,84 +24,117 @@
     <link rel="icon" href="<!--base_path-->favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="<!--base_path-->favicon.ico" type="image/x-icon">
     <style type="text/css">
-        body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:1em;color:#000;background-color:#f7f7f9;<!--BackgroundStart-->background-repeat:no-repeat;background-size:cover;background-attachment:fixed;background-image:url("<!--BackgroundUrl-->");<!--BackgroundEnd-->}
+        body{font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;line-height:1em;color:#000;background-color: #e9ecef;margin: 0px auto;<!--BackgroundStart-->background-repeat:no-repeat;background-size:cover;background-attachment:fixed;background-image:url("<!--BackgroundUrl-->");<!--BackgroundEnd-->}
         a{color:#24292e;cursor:pointer;text-decoration:none}
         ion-icon{font-size:15px;vertical-align:bottom}
-        .changelanguage{position:absolute;right:5px;}
-        .title{text-align:center;margin-top:1rem;letter-spacing:2px;margin-bottom:2rem}
-        .title a{color:#333;text-decoration:none}
-        .list-wrapper{width:80%;margin:0 auto 30px;position:relative;box-shadow:0 0 32px 0 rgb(128,128,128);border-radius:15px;}
-        .list-container{position:relative;/*overflow:hidden;*/border-radius:15px;background-color:rgba(245,245,245,0.5);}
-        .list-container,.list-header-container,.list-wrapper,a.back-link:hover,body{color:#24292e}
+        th{font-weight: 400;}
+        button{border: 0px;border-radius: 2px;background-color: #29292b;color: #ffffff;font-size: 12px;padding: 4px 9px;margin: 0px 5px;cursor: pointer;}
+        a.login {position: absolute;color: white;font-size:12px;font-weight: 200;}
+        #login_input {border: unset;border-bottom: solid 1px #d4d4d4;padding: 4px;margin: 0 5px;}
+        #login_input:focus-visible {outline: solid 2px #a2c2ea;border-bottom: unset;}
+        #login_div{padding: 25px 4px;}
+        input[type="submit"] {border: unset;background: #2e2e3c;color: white;padding: 4px 9px;border-radius: 3px;cursor: pointer;-webkit-appearance: none;}
+        .changelanguage{position:absolute;right:0px;background-color: #29292b;color: white;border: unset;font-weight: 200;font-size: 12px;padding: 1px;-webkit-appearance: none;-moz-appearance:none;}
+        .title{text-align: center;padding-left: 20px;padding-top: 1.5rem;padding-bottom: 1.65rem;background-color: #29292b;margin-block-start: 0;margin-block-end: 0;}
+        .title a{font-weight: 200;letter-spacing: 1px;color:#fff;text-decoration:none}
+        .list-wrapper{position:relative;box-shadow: 0 5px 5px 0px rgb(214 214 214 / 75%);max-width: 840px;margin: 28px auto;border-radius: 4px;}
+        .list-container{position:relative;overflow:hidden;}
         .list-header-container{position:relative}
         .list-header-container a.back-link{color:#000;display:inline-block;position:absolute;font-size:16px;margin:20px 10px;padding:10px 10px;vertical-align:middle;text-decoration:none}
-        .table-header{margin:0;border:0 none;padding:30px 30px;text-align:left;font-weight:400;color:#000;word-break: break-all;word-wrap: break-word;}
-        .list-body-container{position:relative;left:0;box-sizing:border-box;/*overflow-x:hidden;overflow-y:auto;background:rgba(245,245,245,0.5)*/}
-        .more-disk{margin:0;border:0 none;padding:30px 30px;text-align:left;font-weight:400;color:#000;white-space:nowrap;overflow:auto;}
-        .more-disk a{margin:0 10px;padding:5px;transition-duration: 0.4s;border-radius: 12px; background-color: white; color: black; border: 2px solid rgba(85,85,85,0.7); }
-        .more-disk a:hover, .more-disk a[now]{ background-color: rgba(85,85,85,0.7); color: white; }
+        .list-container,.list-header-container,.list-wrapper,a.back-link:hover,body{color:#24292e}
+        .table-header{line-height: 1.2rem;margin:0;border:0 none;padding:25px 30px 18px 30px;text-align:left;font-weight:200;color:#000;background-color:white;word-break: break-all;word-wrap: break-word;}
+        .list-body-container{position:relative;left:0;overflow-x:hidden;overflow-y:auto;box-sizing:border-box;background:white}
+        #more-disk-div{max-width: unset;margin: unset;border-radius: unset;}
+        .more-disk{display: flex;justify-content: space-around;font-size: 0;margin:0;border:0 none;text-align:left;font-weight:400;color:#000;background-color:rgb(255, 255, 255);white-space:nowrap;overflow:auto;}
+        .more-disk a{flex-grow: 1;text-align: center;font-size: 15px;padding:14px 20px;transition-duration: 0.4s;background-color: #f4f5f8; color: #353535;display: inline-block;}
+        .more-disk a:hover, .more-disk a[now]{ background-color: rgb(79 116 220); color: white; }
         .list-table{width:100%;padding:0 20px 20px 20px;border-spacing:0}
-        .list-table tr{height:40px}
-        .list-table tr[data-to]:hover{background:rgba(85,85,85,0.7);color:white;}
+        .list-table tr{height:2rem; line-height: 1.5rem;}
+        .list-table tr[data-to]:hover{background: rgb(79 116 220);color:white;}
         .list-table tr[data-to]:hover a{color:white}
         .list-table tr:first-child{background:rgba(245,245,245,0)}
+        .list-table tr[data-to]:hover .operate ul li a{color:black}
+        .list-table tr ion-icon {vertical-align: middle; height: 2rem;}
         .list-table td,.list-table th{padding:0 10px;text-align:left}
+        .list-table td.file a {vertical-align: middle;}
         .list-table .size,.list-table .updated_at{text-align:right}
         .updated_at{width:25%}
         .size{width:15%}
+        .list-table tbody.grid-view {display: flex;flex-wrap: wrap;position: relative;width: 100%;grid-template: repeat(auto-fill, 100px) / repeat(auto-fill, minmax(100px, 50%));grid-auto-rows: 100px;}
+        .list-table tbody.grid-view td, .list-table tbody.grid-view th {padding:0;}
+        .list-table tbody.grid-view img {height: 150px;width: 100%;object-fit: cover;position:relative;}
+        .list-table tbody.grid-view #tr0{width: 100%;height: 33px;background-color: unset !important;}
+        .list-table  tbody.grid-view tr {width: unset;height: 150px;background-color: #efefef;margin: 2px;position: relative;flex-grow: 1;min-width: 100px;}
+        .list-table tbody.grid-view td.file {display: block;width: 100%;height: 100%;}
+        .list-table tbody.grid-view td.file a {width: 100%;height: 100%;display: inline-block;position:relative}
+        .list-table tbody.grid-view td.file a > span {position: absolute;left: 3px;}
+        .list-table tbody.grid-view td.file .download {display: none;}
+        .list-table tbody.grid-view td.file ion-icon{position: absolute;top: calc(50% - 25px);left: calc(50% - 25px);width: 50px;height: 50px;color: #0002}
+        .list-table tbody.grid-view td.updated_at {position: absolute;bottom: 0px;height: 1.5em;overflow-y: hidden;width: 100%;background-image: linear-gradient(#ffffff00, #0000008f);color: #fffc;z-index: 3;}
+        .list-table tbody.grid-view td.size {display: none;}
         .mask{position:absolute;left:0px;top:0px;width:100%;background-color:#000;filter:alpha(opacity=50);opacity:0.5;z-index:2;}
 <!--AdminStart-->
-        .operate{display:inline-table;margin:0;margin-right:5px;list-style:none}
-        .operate ul{position:absolute;display:none;background:#fffaaa;border:0px #f7f7f7 solid;border-radius:5px;margin:-7px 0 0 0;padding:0 7px;color:#205D67;z-index:1;}
-        .operate:hover ul{position:absolute;display:inline-table;}
+        #top-op {position: absolute;color: white;font-size: 12px;}
+        .operate{font-size: 0.9em;display:inline-table;margin:0;margin-right:5px;list-style:none;}
+        .operate ul{position:absolute;display:none;background:#fffaaa;border:0px #f7f7f7 solid;border-radius:3px;margin:-7px 0 0 0;padding:0 7px;color:#205D67;z-index:1;}
+        .operate:hover ul{min-width: 120px;position:absolute;display:inline-table;background: white;box-shadow: 2px 2px 5px 0 #00000042;margin:1px 0;padding: 2px 2px 4px 2px;}
         body .active ul{position:absolute;display:inline-table;} /*for some mobile browser */
         .operate ul li{padding:7px;list-style:none;display:block;}
-        .list-table tr[data-to]:hover .operate ul li a{color:black}
+        .operate ul li:hover {background-color: #f4f5f8;}
+        #tr0{height: 40px;}
 <!--AdminEnd-->
-        .operatediv{position:absolute;border:1px #CCCCCC;background-color:#FFFFCC;z-index:2;}
-        .operatediv div{margin:16px}
-        .operatediv_close{position:absolute;right:3px;top:3px;}
-        .readme{padding:8px;}
+        .operatediv{position:absolute;border-radius: 8px;background-color:#ffffff;z-index:2;box-shadow: 5px 5px 10px 0 #00000033;padding: 15px 4px;}
+        .operatediv div{margin:10px}
+        .operatediv_close{position:absolute;right:8px;top:4px;font-size: 20px;color: #505050;}
+        .readme{padding:8px;background-color: white;}
         .markdown-body, .customfile{padding:20px;text-align:left}
-        @media only screen and (orientation: portrait){
+        .checkbox {height: 14px;width: 14px;border: solid 1px #c4c4c4;border-radius: 0px;vertical-align: middle;margin-top: -3px;margin-bottom: 0px;}
+        #upload_div{padding: 0 20px;line-height: 30px;}
+        #upload_submit{background: #29292b;color: white;border: unset;padding: 4px 10px;font-size: 12px;cursor: pointer;border-radius: 2px;-webkit-appearance: none;-moz-appearance: none;}
+        select{cursor: pointer;padding: 3px;margin-right: 3px;color: #3a3a3a;border-color: #c2c2c2;border-radius: 4px;-webkit-appearance: none;}
+        #upload_file{align-self: center;}
+        #rename_label,#encrypt_label,#move_label {font-size: 1.15em;font-weight: 200;padding: 0 1px;}
+        #rename_input,#encrypt_input,#move_input {padding: 4px;}
+        textarea#url {width: 85%;margin: 2px 0px 0px;height: 18px;border: solid 2px #ececec;background-color: whitesmoke;color: #595c63;padding: 3px 10px;}
+        @media only screen and (max-width:480px){
 <!--BackgroundMStart-->
             body{background-repeat:no-repeat;background-size:cover;background-attachment:fixed;background-image:url("<!--BackgroundMUrl-->");}
 <!--BackgroundMEnd-->
-            .title{margin-bottom:24px}
-            .list-wrapper{width:95%; margin-bottom:24px;}
-            .list-table {padding:8px}
+            #head-div {max-width: unset;margin: 10px 0;}
+            #list-div{max-width: unset;margin: unset;}
+            .table-header{padding-bottom: 15px;}
+            .list-table {padding: 0px 20px 8px 20px;}
             .list-table td, .list-table th{white-space:nowrap;overflow:auto;max-width:80px}
+            .list-body-container{padding-bottom: 10px;}
             .size, .updated_at{display:none}
+            #upload_btns {display: flex;justify-content: space-evenly;padding: 10px 20px 20px 20px;}
+            #upload_file{align-self: center;}
         }
     </style>
     <!--customCss-->
 </head>
 
 <body>
-    <div align="center"><p><h1><a href='https://xsdjt.github.io'>返回主页面</a></h1></p></div>
-    <div style="padding:1px" id="top-div">
 <!--LoginStart-->
-        <a class="login" onclick="login();"><ion-icon name="log-in"></ion-icon><!--constStr@Login--></a>
+    <a class="login" onclick="login();"><ion-icon name="log-in"></ion-icon><!--constStr@Login--></a>
 <!--LoginEnd-->
 <!--AdminStart-->
-        <li class="operate"><ion-icon name="construct"></ion-icon><!--constStr@Operate--><ul>
+    <li class="operate" id="top-op"><ion-icon name="construct"></ion-icon><!--constStr@Operate--><ul>
 <!--IsFolderStart-->
-            <li><a onclick="showdiv(event,'create','');"><ion-icon name="add-circle"></ion-icon><!--constStr@Create--></a></li>
-            <li><a onclick="showdiv(event,'encrypt','');"><ion-icon name="lock-closed"></ion-icon><!--constStr@Encrypt--></a></li>
-            <li><a href="?RefreshCache"><ion-icon name="refresh"></ion-icon><!--constStr@RefreshCache--></a></li>
+        <li><a onclick="showdiv(event,'create','');"><ion-icon name="add-circle"></ion-icon><!--constStr@Create--></a></li>
+        <li><a onclick="showdiv(event,'encrypt','');"><ion-icon name="lock-closed"></ion-icon><!--constStr@Encrypt--></a></li>
+        <li><a href="?RefreshCache"><ion-icon name="refresh"></ion-icon><!--constStr@RefreshCache--></a></li>
 <!--IsFolderEnd-->
-            <li><a href="<!--IsPreview?-->setup"><ion-icon name="settings"></ion-icon><!--constStr@Setup--></a></li>
-            <li><a onclick="logout();"><ion-icon name="log-out"></ion-icon><!--constStr@Logout--></a></li>
-        </ul></li>
+        <li><a href="<!--IsPreview?-->setup"><ion-icon name="settings"></ion-icon><!--constStr@Setup--></a></li>
+        <li><a onclick="logout();"><ion-icon name="log-out"></ion-icon><!--constStr@Logout--></a></li>
+    </ul></li>
 <!--AdminEnd-->
-        &nbsp;
-        <!--<select class="changelanguage" name="language" onchange="changelanguage(this.options[this.options.selectedIndex].value)">
-            <option value="">Language</option>
+    <select class="changelanguage" name="language" onchange="changelanguage(this.options[this.options.selectedIndex].value)">
+        <option value="">Language</option>
 <!--SelectLanguageStart-->
-                <option value="<!--SelectLanguageKey-->" <!--SelectLanguageSelected-->><!--SelectLanguageValue--></option>
+            <option value="<!--SelectLanguageKey-->" <!--SelectLanguageSelected-->><!--SelectLanguageValue--></option>
 <!--SelectLanguageEnd-->
-        </select>-->
-    </div>
+    </select>
 <!--NeedUpdateStart-->
     <div style='position:absolute;'><font color='red'><!--constStr@NeedUpdate--></font></div>
 <!--NeedUpdateEnd-->
@@ -165,7 +198,7 @@
                 </div>
 <!--EncryptedEnd-->
 <!--GuestUploadStart-->
-                <div id="upload_div" style="padding:0 0 16px 0">
+                <div id="upload_div" style="margin:0 0 16px 0">
                 <div id="upload_btns" align="center">
                     <select onchange="document.getElementById('upload_file').webkitdirectory=this.value;">
                         <option value=""><!--constStr@UploadFile--></option>
@@ -178,14 +211,14 @@
 <!--GuestUploadEnd-->
 
 <!--IsFileStart-->
-                <div style="padding: 12px 4px 4px; text-align: center">
-                    <div style="margin: 24px">
-                        <textarea id="url" title="url" rows="1" style="width: 100%; margin-top: 2px;" readonly><!--FileEncodeUrl--></textarea>
-                        <a href="<!--FileEncodeUrl-->"><ion-icon name="download" style="line-height: 16px;vertical-align: middle;"></ion-icon>&nbsp;<!--constStr@Download--></a>
+                <div style="margin: 12px 4px 4px;">
+                    <div style="margin: 0px 24px;display: flex;justify-content: space-between;align-items: center;">
+                        <textarea id="url" title="url" rows="1" readonly><!--FileEncodeUrl--></textarea>
+                        <a style="min-width: 50px;text-align: right;" href="<!--FileEncodeUrl-->"><ion-icon name="download" style="line-height: 16px;vertical-align: middle;"></ion-icon><!--constStr@Download--></a>
                     </div>
                     <div style="margin: 24px">
 <!--IsimgFileStart-->
-                        <img src="<!--FileEncodeUrl-->" alt="<!--FileName-->" onload="if (this.offsetWidth>document.getElementById('url').offsetWidth) this.style.width='100%';if (this.offsetHeight>document.documentElement.clientHeight) this.style.height=document.documentElement.clientHeight + 'px';" />
+                        <img src="<!--FileEncodeUrl-->" alt="<!--FileName-->" onload="if (this.offsetWidth>document.getElementById('url').offsetWidth) this.style.width='100%';" />
 <!--IsimgFileEnd-->
 <!--IsvideoFileStart-->
                         <div id="video-a0"></div>
@@ -203,7 +236,6 @@
                         <div id="txt">
 <!--AdminStart-->
                         <form id="txt-form" action="" method="POST">
-                            <input name="_admin" type="hidden" value="">
                             <a onclick="document.getElementById('txt-a').readOnly='';document.getElementById('txt-save').style.display='';document.getElementById('txt-editbutton').style.display='none';document.getElementById('txt-cancelbutton').style.display='';" id="txt-editbutton"><ion-icon name="create"></ion-icon><!--constStr@ClicktoEdit--></a>
                             <a onclick="document.getElementById('txt-a').readOnly='readonly';document.getElementById('txt-save').style.display='none';document.getElementById('txt-editbutton').style.display='';document.getElementById('txt-cancelbutton').style.display='none';" id="txt-cancelbutton" style="display:none"><ion-icon name="close"></ion-icon><!--constStr@CancelEdit--></a>&nbsp;&nbsp;&nbsp;
                             <a id="txt-save" style="display:none"><ion-icon name="save"></ion-icon><!--constStr@Save--></a>
@@ -211,12 +243,6 @@
                             <textarea id="txt-a" name="editfile" readonly style="width: 100%; margin-top: 2px;" <!--AdminStart-->onchange="document.getElementById('txt-save').onclick=function(){document.getElementById('txt-form').submit();}"<!--AdminEnd--> ><!--TxtContent--></textarea>
 <!--AdminStart-->
                             </form>
-                            <script>
-                                var inputAdminStorage = document.getElementsByName("_admin");
-                                for (i=0;i<inputAdminStorage.length;i++) {
-                                    inputAdminStorage[i].value = localStorage.getItem("admin");
-                                }
-                            </script>
 <!--AdminEnd-->
                         </div>
 <!--IstxtFileEnd-->
@@ -230,13 +256,12 @@
                 <table class="list-table" id="list-table">
                     <tr id="tr0">
                         <th class="file">
-                            <a id="file_a0" fileid="<!--FolderId-->" onclick="sortby('a');"><!--constStr@File--></a>
+                            <a onclick="sortby('a');"><!--constStr@File--></a>
 <!--ShowThumbnailsStart-->
-                            &nbsp;&nbsp;&nbsp;
-                            <label><input type="checkbox" id="originalpic"><!--constStr@OriginalPic--></label>
+                            &nbsp;&nbsp;
+                            <label style="margin: 0px 5px;"><input type="checkbox" class="checkbox" id="originalpic"><!--constStr@OriginalPic--></label>
                             <button onclick="showthumbnails(this);"><!--constStr@ShowThumbnails--></button>
 <!--ShowThumbnailsEnd-->
-                            &nbsp;
                             <button onclick="CopyAllDownloadUrl('.download');"><!--constStr@CopyAllDownloadUrl--></button>
                         </th>
                         <th class="updated_at"><a onclick="sortby('time');"><!--constStr@EditTime--></a></th>
@@ -314,7 +339,7 @@
                 </form>
 <!--MorePageEnd-->
 <!--AdminStart-->
-                <div id="upload_div" style="padding:0 0 16px 0">
+                <div id="upload_div" style="margin:0 0 16px 0">
                 <div id="upload_btns" align="center">
                     <select onchange="document.getElementById('upload_file').webkitdirectory=this.value;">
                         <option value=""><!--constStr@UploadFile--></option>
@@ -363,7 +388,7 @@
     <div style="word-break: break-all;word-wrap: break-word;">
         <div id="rename_div" class="operatediv" style="display:none">
             <div>
-                <label id="rename_label"></label><br><br><a onclick="operatediv_close('rename')" class="operatediv_close"><!--constStr@Close--></a>
+                <label id="rename_label"></label><br><br><a onclick="operatediv_close('rename')" class="operatediv_close">×</a>
                 <form id="rename_form" onsubmit="return submit_operate('rename');">
                 <input id="rename_sid" name="rename_sid" type="hidden" value="">
                 <input id="rename_fileid" name="rename_fileid" type="hidden" value="">
@@ -375,7 +400,7 @@
         </div>
         <div id="delete_div" class="operatediv" style="display:none">
             <div>
-                <br><a onclick="operatediv_close('delete')" class="operatediv_close"><!--constStr@Close--></a>
+                <br><a onclick="operatediv_close('delete')" class="operatediv_close">×</a>
                 <label id="delete_label"></label>
                 <form id="delete_form" onsubmit="return submit_operate('delete');">
                 <label id="delete_input"><!--constStr@Delete-->?</label>
@@ -388,7 +413,7 @@
         </div>
         <div id="encrypt_div" class="operatediv" style="display:none">
             <div>
-                <label id="encrypt_label"></label><br><br><a onclick="operatediv_close('encrypt')" class="operatediv_close"><!--constStr@Close--></a>
+                <label id="encrypt_label"></label><br><br><a onclick="operatediv_close('encrypt')" class="operatediv_close">×</a>
                 <form id="encrypt_form" onsubmit="return submit_operate('encrypt');">
                 <input id="encrypt_sid" name="encrypt_sid" type="hidden" value="">
                 <input id="encrypt_fileid" name="encrypt_fileid" type="hidden" value="">
@@ -400,7 +425,7 @@
         </div>
         <div id="copy_div" class="operatediv" style="display:none">
             <div>
-                <label id="copy_label"></label><br><br><a onclick="operatediv_close('copy')" class="operatediv_close"><!--constStr@Close--></a>
+                <label id="copy_label"></label><br><br><a onclick="operatediv_close('copy')" class="operatediv_close">×</a>
                 <form id="copy_form" onsubmit="return submit_operate('copy');">
                 <input id="copy_sid" name="copy_sid" type="hidden" value="">
                 <input id="copy_fileid" name="copy_fileid" type="hidden" value="">
@@ -412,7 +437,7 @@
         </div>
         <div id="move_div" class="operatediv" style="display:none">
             <div>
-                <label id="move_label"></label><br><br><a onclick="operatediv_close('move')" class="operatediv_close"><!--constStr@Close--></a>
+                <label id="move_label"></label><br><br><a onclick="operatediv_close('move')" class="operatediv_close">×</a>
                 <form id="move_form" onsubmit="return submit_operate('move');">
                 <input id="move_sid" name="move_sid" type="hidden" value="">
                 <input id="move_fileid" name="move_fileid" type="hidden" value="">
@@ -431,7 +456,7 @@
         </div>
         <div id="create_div" class="operatediv" style="display:none">
             <div>
-                <a onclick="operatediv_close('create')" class="operatediv_close"><!--constStr@Close--></a>
+                <a onclick="operatediv_close('create')" class="operatediv_close">×</a>
                 <form id="create_form" onsubmit="return submit_operate('create');">
                     <input id="create_sid" name="create_sid" type="hidden" value="">
                     <input id="create_fileid" name="create_fileid" type="hidden" value="">
@@ -469,8 +494,8 @@
 <!--AdminEnd-->
 <!--LoginStart-->
     <div id="login_div" class="operatediv" style="display:none">
-        <div style="margin:50px">
-            <a onclick="operatediv_close('login')" class="operatediv_close"><!--constStr@Close--></a>
+        <div>
+            <a onclick="operatediv_close('login')" class="operatediv_close">×</a>
             <center>
                 <form action="<!--IsPreview?-->admin" method="post" onsubmit="return sha1loginpass(this);">
                     <input id="login_input" name="password1" type="password" placeholder="<!--constStr@InputPassword-->">
@@ -491,6 +516,9 @@
 <!--AliyundriveUploadJsStart--><script src="https://cdn.bootcss.com/js-sha1/0.6.0/sha1.min.js"></script><!--AliyundriveUploadJsEnd-->
 <!--IsFileStart--><!--IspdfFileStart--><script src="//cdn.bootcss.com/pdf.js/2.3.200/pdf.min.js"></script><!--IspdfFileEnd--><!--IsFileEnd-->
 <!--ListEnd-->
+<style type="text/css">
+    .markdown-body{font-size: 14px;}
+</style>
 <script type="text/javascript">
     function changelanguage(str)
     {
@@ -530,10 +558,7 @@
 <!--IsFileStart-->
     var $url = document.getElementById('url');
     if ($url) {
-        //$url.innerHTML = location.protocol + '//' + location.host + $url.innerHTML;
-        let url = location.href;
-        url = url.substr(0, url.length-8);
-        $url.innerHTML = url.replace(/&amp;/g, '&amp;amp;');
+        $url.innerHTML = location.protocol + '//' + location.host + $url.innerHTML;
         $url.style.height = $url.scrollHeight + 'px';
     }
 <!--IsofficeFileStart-->
@@ -612,12 +637,12 @@
             });
         }
     }
-    addVideos(["<!--FileEncodeUrl-->"]);
+    addVideos(['<!--FileEncodeUrl-->']);
 <!--IsvideoFileEnd-->
 <!--IspdfFileStart-->
     pdfjsLib.GlobalWorkerOptions.workerSrc = '//cdn.bootcss.com/pdf.js/2.3.200/pdf.worker.min.js';
     var loadingTask = pdfjsLib.getDocument({
-        url: "<!--FileDownUrl-->",
+        url: '<!--FileDownUrl-->',
         cMapUrl: "//cdn.jsdelivr.net/npm/pdfjs-dist@2.2.228/cmaps/",
         cMapPacked: true,
         rangeChunkSize: 65535
@@ -666,9 +691,39 @@
     }
 <!--ReadmemdEnd-->
 <!--ShowThumbnailsStart-->
+    var isGrid = false;
+    var isthumbLoaded = false;
     function showthumbnails(obj) {
+
         images = [<!--ImgExts-->];
         var files=document.getElementsByName('filelist');
+
+        if (document.getElementById('originalpic').checked==true){
+            if(isGrid){
+                var list_body = document.getElementById('list-table').firstElementChild
+                list_body.classList.remove('grid-view')
+                isGrid = false
+            }
+        }else {
+            if(!isGrid){
+                // turn to grid view
+                var list_body = document.getElementById('list-table').firstElementChild
+                list_body.classList.add('grid-view')
+                isGrid = true
+                if (isthumbLoaded) {
+                    return
+                }else {
+                    isthumbLoaded = true
+                }
+            } else {
+                var list_body = document.getElementById('list-table').firstElementChild
+                list_body.classList.remove('grid-view')
+                isGrid = false
+                return
+            }
+        }
+
+
         for ($i=0;$i<files.length;$i++) {
             str=files[$i].innerText;
             if (str.substr(-1)==' ') str=str.substr(0,str.length-1);
@@ -687,7 +742,7 @@
                 }
             }
         }
-        obj.disabled='disabled';
+        // obj.disabled='disabled';
     }
     function get_thumbnails_url(url, name, filea) {
         var xhr = new XMLHttpRequest();
@@ -695,7 +750,7 @@
         xhr.send('');
         xhr.onload = function(e){
             if (xhr.status==200) {
-                if (xhr.responseText!='') filea.innerHTML='<img src="'+xhr.responseText+'" alt="'+name+'">';
+                if (xhr.responseText!='') filea.innerHTML= '<span>' + filea.innerHTML + '</span>' + '<img src="'+xhr.responseText+'" alt="'+name+'">';
             } else console.log(xhr.status+'\n'+xhr.responseText);
         }
     }
@@ -952,9 +1007,7 @@
             } else {
                 filemd5 = spark.end();
                 td2.innerHTML='md5: '+filemd5;
-                delete uploading[upbigfilename];
                 upbigfilename = filemd5+ext;
-                uploading[upbigfilename] = i;
 <!--GuestEnd-->
             td2.innerHTML='<!--constStr@GetUploadLink--> ...';
             var xhr1 = new XMLHttpRequest();
@@ -999,7 +1052,7 @@
                     delete uploading[upbigfilename];
                 }
             }
-            xhr1.send('upbigfilename='+ upbigfilename +'&filesize='+ file.size +'&filelastModified='+ file.lastModified +'&filemd5='+ filemd5 + '&_admin=' + localStorage.getItem("admin"));
+            xhr1.send('upbigfilename='+ upbigfilename +'&filesize='+ file.size +'&filelastModified='+ file.lastModified +'&filemd5='+ filemd5);
 <!--GuestStart-->
             }
         }
@@ -1018,7 +1071,6 @@
         var newstartsize = 0;
         if(!!file){
             var asize=0;
-            var chunksize=10*1024*1024; // chunk size, max 60M. 每小块上传大小，最大60M，微软建议10M
             var totalsize=file.size;
             var xhr2 = new XMLHttpRequest();
             xhr2.open("GET", url);
@@ -1036,6 +1088,8 @@
                     } else {
                         StartStr='<!--constStr@LastUpload-->'+size_format(newstartsize)+ '<br><!--constStr@ThisTime--><!--constStr@UploadStartAt-->:' +StartTime.toLocaleString()+'<br>' ;
                     }
+                    var chunksize=5*1024*1024; // chunk size, max 60M. 每小块上传大小，最大60M，微软建议10M
+                    if (totalsize>200*1024*1024) chunksize=10*1024*1024;
                     function readblob(start) {
                         var end=start+chunksize;
                         var blob = file.slice(start,end);
@@ -1045,7 +1099,6 @@
 
                     reader.onload = function(e){
                         var binary = this.result;
-                        var lastCurrentSpeed;
                         var xhr = new XMLHttpRequest();
                         xhr.open("PUT", url, true);
                         //xhr.setRequestHeader('x-requested-with','XMLHttpRequest');
@@ -1053,10 +1106,9 @@
                         xhr.setRequestHeader('Content-Range', 'bytes ' + asize + '-' + bsize +'/'+ totalsize);
                         xhr.upload.onprogress = function(e){
                             if (e.lengthComputable) {
-                                let tmptime = new Date();
-                                let tmpspeed = e.loaded*1000/(tmptime.getTime()-C_starttime.getTime());
-                                lastCurrentSpeed = tmpspeed;
-                                let remaintime = (totalsize-asize-e.loaded)/tmpspeed;
+                                var tmptime = new Date();
+                                var tmpspeed = e.loaded*1000/(tmptime.getTime()-C_starttime.getTime());
+                                var remaintime = (totalsize-asize-e.loaded)/tmpspeed;
                                 label.innerHTML=StartStr+'<!--constStr@Upload--> ' +size_format(asize+e.loaded)+ ' / '+size_format(totalsize) + ' = ' + ((asize+e.loaded)*100/totalsize).toFixed(2) + '% <!--constStr@AverageSpeed-->:'+size_format((asize+e.loaded-newstartsize)*1000/(tmptime.getTime()-StartTime.getTime()))+'/s<br><!--constStr@CurrentSpeed--> '+size_format(tmpspeed)+'/s <!--constStr@Expect--> '+seconds2hour(remaintime.toFixed(1));
                             }
                         }
@@ -1100,9 +1152,6 @@
                                 } else {
                                     var a=response['nextExpectedRanges'][0];
                                     asize=Number( a.slice(0,a.indexOf("-")) );
-                                    chunksize = 10*1024*1024;
-                                    if (lastCurrentSpeed>5*1024*1024) chunksize = 20*1024*1024;
-                                    if (lastCurrentSpeed>10*1024*1024) chunksize = 50*1024*1024;
                                     readblob(asize);
                                 }
                             } } else readblob(asize);
@@ -1175,6 +1224,7 @@
             uploading[upbigfilename] = [i];
             var spark = sha1.create();
             var reader = new FileReader();
+            var chunksize=10*1024*1024;
             var asize = 0;
             var filesha1;
             function readblob(start) {
@@ -1250,7 +1300,7 @@
                                 getuplink(i);
                             }*/
                         }
-                        xhr1.send('upbigfilename='+ upbigfilename +'&filesize='+ file.size +'&filelastModified='+ file.lastModified + '&filesha1=' + filesha1 + '&chunksize=' + chunksize + '&_admin=' + localStorage.getItem("admin"));
+                        xhr1.send('upbigfilename='+ upbigfilename +'&filesize='+ file.size +'&filelastModified='+ file.lastModified + '&filesha1=' + filesha1 + '&chunksize=' + chunksize);
                     }
                 }
             }
@@ -1336,7 +1386,7 @@
                         }
                         delete uploading[filename];
                     }
-                    xhr1.send('uploadid=' + uploadid + '&fileid=' + fileid + '&etag=' + JSON.stringify(res['ETag']) + '&_admin=' + localStorage.getItem("admin"));
+                    xhr1.send('uploadid=' + uploadid + '&fileid=' + fileid + '&etag=' + JSON.stringify(res['ETag']));
                 } else {
                     var binary = this.result;
                     var xhr = new XMLHttpRequest();
@@ -1407,7 +1457,7 @@
                                     }
                                     delete uploading[filename];
                                 }
-                                xhr1.send('uploadid=' + uploadid + '&fileid=' + fileid + '&etag=' + JSON.stringify(res['ETag']) + '&_admin=' + localStorage.getItem("admin"));
+                                xhr1.send('uploadid=' + uploadid + '&fileid=' + fileid + '&etag=' + JSON.stringify(res['ETag']));
                                 // uploadbuttonshow();
                             } else {
                                 readblob(asize);
@@ -1450,7 +1500,7 @@
         var expd = new Date();
         expd.setTime(expd.getTime()+1000);
         var expires = "expires="+expd.toGMTString();
-        document.cookie = "admin=; path=<!--base_path-->; "+expires;
+        document.cookie = "admin=; path=/; "+expires;
         location.href = location.href;
     }
     /*for some mobile browser*/
@@ -1478,33 +1528,32 @@
         document.getElementById('mask').style.display='';
         //document.getElementById('mask').style.width=document.documentElement.scrollWidth+'px';
         document.getElementById('mask').style.height=document.documentElement.scrollHeight<window.innerHeight?window.innerHeight:document.documentElement.scrollHeight+'px';
-        var str;
         if (num=='') {
-            str = '';
-            num = 0;
+            var str='';
+            var fileid='';
         } else {
-            str = decodeURIComponent(document.getElementById('file_a'+num).href);
+            var str=decodeURIComponent(document.getElementById('file_a'+num).href);
             if (str.substr(-1)==' ') str=str.substr(0, str.length-1);
             if (str.substr(-1)=='/') str=str.substr(0, str.length-1);
             if (str.substr(-8)=='?preview') str=str.substr(0, str.length-8);
             if (str.lastIndexOf('/')>-1) str=str.substr(str.lastIndexOf('/')+1);
+            var fileid=document.getElementById('file_a'+num).attributes['fileid'].nodeValue;
         }
-        var fileid = document.getElementById('file_a'+num).attributes['fileid'].nodeValue;
         document.getElementById(action + '_div').style.display='';
         document.getElementById(action + '_label').innerText=str;//.replace(/&/,'&amp;');
         document.getElementById(action + '_sid').value=num;
         document.getElementById(action + '_fileid').value=fileid;
         document.getElementById(action + '_hidden').value=str;
         if (action=='rename') document.getElementById(action + '_input').value=str;
-        /*var $e = event || window.event;
-        var $scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;*/
+        var $e = event || window.event;
+        var $scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
         var $scrollY = document.documentElement.scrollTop || document.body.scrollTop;
-        /*var $x = $e.pageX || $e.clientX + $scrollX;
+        var $x = $e.pageX || $e.clientX + $scrollX;
         var $y = $e.pageY || $e.clientY + $scrollY;
-        if (action=='create') {*/
+        if (action=='create') {
             document.getElementById(action + '_div').style.left=(document.body.clientWidth-document.getElementById(action + '_div').offsetWidth)/2 +'px';
             document.getElementById(action + '_div').style.top=(window.innerHeight-document.getElementById(action + '_div').offsetHeight)/2+$scrollY +'px';
-        /*} else {
+        } else {
             if ($x + document.getElementById(action + '_div').offsetWidth > document.body.clientWidth) {
                 if (document.getElementById(action + '_div').offsetWidth > document.body.clientWidth) {
                     document.getElementById(action + '_div').offsetWidth=document.body.clientWidth+'px';
@@ -1516,7 +1565,7 @@
                 document.getElementById(action + '_div').style.left=$x+'px';
             }
             document.getElementById(action + '_div').style.top=$y+'px';
-        }*/
+        }
         document.getElementById(action + '_input').focus();
     }
     function submit_operate(str) {
@@ -1545,7 +1594,7 @@
             document.getElementById(str+'_div').style.display='none';
             document.getElementById('mask').style.display='none';
         }
-        xhr.send(serializeForm(str+'_form') + '&_admin=' + localStorage.getItem("admin"));
+        xhr.send(serializeForm(str+'_form'));
         return false;
     }
     function addelement(html) {

@@ -1,4 +1,7 @@
 <?php
+            // https://docs.microsoft.com/en-us/graph/api/driveitem-get?view=graph-rest-1.0
+            // https://docs.microsoft.com/zh-cn/graph/api/driveitem-put-content?view=graph-rest-1.0&tabs=http
+            // https://developer.microsoft.com/zh-cn/graph/graph-explorer
 
 class Onedrive {
     protected $access_token;
@@ -46,9 +49,6 @@ class Onedrive {
     {
         global $exts;
         if (!($files = getcache('path_' . $path, $this->disktag))) {
-            // https://docs.microsoft.com/en-us/graph/api/driveitem-get?view=graph-rest-1.0
-            // https://docs.microsoft.com/zh-cn/graph/api/driveitem-put-content?view=graph-rest-1.0&tabs=http
-            // https://developer.microsoft.com/zh-cn/graph/graph-explorer
             $pos = splitlast($path, '/');
             $parentpath = $pos[0];
             if ($parentpath=='') $parentpath = '/';
@@ -131,7 +131,7 @@ class Onedrive {
                 } else {
                     $files['error']['stat'] = 503;
                     $files['error']['code'] = 'unknownError';
-                    $files['error']['message'] = 'unknownError';
+                    $files['error']['message'] = 'unknownError ' . $arr['body'] . " ~";
                 }
                 //$files = json_decode( '{"unknownError":{ "stat":'.$arr['stat'].',"message":"'.$arr['body'].'"}}', true);
                 //error_log1(json_encode($files, JSON_PRETTY_PRINT));
@@ -180,6 +180,7 @@ class Onedrive {
             return $files;
         }
         //error_log1(json_encode($tmp));
+        //echo '<pre>' . json_encode($tmp, JSON_PRETTY_PRINT) . '</pre>';
         return $tmp;
     }
 
@@ -342,21 +343,24 @@ class Onedrive {
         $oldname = path_format($file['path'] . '/' . $oldname);
         $data = '{"name":"' . $newname . '"}';
                 //echo $oldname;
-        $result = $this->MSAPI('PATCH', $oldname, $data);
+        if ($file['id']) $result = $this->MSAPI('PATCH', "/items/" . $file['id'], $data);
+        else $result = $this->MSAPI('PATCH', $oldname, $data);
         return output(json_encode($this->files_format(json_decode($result['body'], true))), $result['stat']);
     }
     public function Delete($file) {
         $filename = spurlencode($file['name']);
         $filename = path_format($file['path'] . '/' . $filename);
                 //echo $filename;
-        $result = $this->MSAPI('DELETE', $filename);
-        return output(json_encode($this->files_format(json_decode($result['body'], true))), $result['stat']);
-        return output($result['body'], $result['stat']);
+        if ($file['id']) $result = $this->MSAPI('DELETE', "/items/" . $file['id']);
+        else $result = $this->MSAPI('DELETE', $filename);
+        if ($result['stat']!=204) $r_body = json_encode($this->files_format(json_decode($result['body'], true)));
+        return output($r_body, $result['stat']);
+        //return output($result['body'], $result['stat']);
     }
     public function Encrypt($folder, $passfilename, $pass) {
-        $filename = path_format($folder['path'] . '/' . urlencode($passfilename));
+        $filename = '/items/' . $folder['id'] . ':/' . urlencode($passfilename);
         if ($pass==='') {
-            $result = $this->MSAPI('DELETE', $filename, '');
+            $result = $this->MSAPI('DELETE', $filename);
         } else {
             $result = $this->MSAPI('PUT', $filename, $pass);
         }
@@ -364,18 +368,19 @@ class Onedrive {
         if ($path1!='/'&&substr($path1, -1)=='/') $path1 = substr($path1, 0, -1);
         savecache('path_' . $path1 . '/?password', '', $this->disktag, 1);
         return output(json_encode($this->files_format(json_decode($result['body'], true))), $result['stat']);
-        return output($result['body'], $result['stat']);
+        //return output($result['body'], $result['stat']);
     }
     public function Move($file, $folder) {
         $filename = spurlencode($file['name']);
         $filename = path_format($file['path'] . '/' . $filename);
         $data = '{"parentReference":{"path": "/drive/root:' . $folder['path'] . '"}}';
-        $result = $this->MSAPI('PATCH', $filename, $data);
+        if ($file['id']) $result = $this->MSAPI('PATCH', "/items/" . $file['id'], $data);
+        else $result = $this->MSAPI('PATCH', $filename, $data);
         $path2 = spurlencode($folder['path'], '/');
         if ($path2!='/'&&substr($path2, -1)=='/') $path2 = substr($path2, 0, -1);
         savecache('path_' . $path2, json_decode('{}', true), $this->disktag, 1);
         return output(json_encode($this->files_format(json_decode($result['body'], true))), $result['stat']);
-        return output($result['body'], $result['stat']);
+        //return output($result['body'], $result['stat']);
     }
     public function Copy($file) {
         $filename = spurlencode($file['name']);
@@ -389,7 +394,8 @@ class Onedrive {
             $newname = '.' . $namearr[1] . ' (' . date("Ymd\THis\Z") . ')';
         }
         $data = '{ "name": "' . $newname . '" }';
-        $result = $this->MSAPI('copy', $filename, $data);
+        if ($file['id']) $result = $this->MSAPI('copy', "/items/" . $file['id'], $data);
+        else $result = $this->MSAPI('copy', $filename, $data);
         /*$num = 0;
         while ($result['stat']==409 && json_decode($result['body'], true)['error']['code']=='nameAlreadyExists') {
             $num++;
@@ -404,7 +410,7 @@ class Onedrive {
             $result = $this->MSAPI('copy', $filename, $data);
         }*/
         return output(json_encode($this->files_format(json_decode($result['body'], true))), $result['stat']);
-        return output($result['body'], $result['stat']);
+        //return output($result['body'], $result['stat']);
     }
     public function Edit($file, $content) {
         /*TXT一般不会超过4M，不用二段上传
@@ -431,7 +437,7 @@ class Onedrive {
         }
         //savecache('path_' . $path1, json_decode('{}',true), $_SERVER['disktag'], 1);
         return output(json_encode($this->files_format(json_decode($result['body'], true))), $result['stat']);
-        return output($result['body'], $result['stat']);
+        //return output($result['body'], $result['stat']);
     }
 
     public function AddDisk() {
@@ -456,6 +462,7 @@ class Onedrive {
             }
 
             $tmp = null;
+            $tmp['Driver'] = get_class($this);
             if ($_POST['DriveType']=='Onedrive') {
                 /*$api = $this->api_url . '/me';
                 $arr = curl('GET', $api, '', [ 'Authorization' => 'Bearer ' . $this->access_token ], 1);
@@ -501,14 +508,23 @@ class Onedrive {
                 $title = 'Error';
                 return message($html, $title, 201);
             } else {
-                $str .= '<meta http-equiv="refresh" content="5;URL=' . $url . '">
-                <script>
+                $html .= '<script>
                 var expd = new Date();
                 expd.setTime(expd.getTime()+1);
                 var expires = "expires="+expd.toGMTString();
                 document.cookie=\'disktag=; path=/; \'+expires;
+                var i = 0;
+                var status = "' . $response['DplStatus'] . '";
+                var uploadList = setInterval(function(){
+                    if (document.getElementById("dis").style.display=="none") {
+                        console.log(i++);
+                    } else {
+                        clearInterval(uploadList);
+                        location.href = "' . $url . '";
+                    }
+                }, 1000);
                 </script>';
-                return message($str, getconstStr('WaitJumpIndex'), 201);
+                return message($html, getconstStr('WaitJumpIndex'), 201, 1);
             }
         }
 
@@ -604,9 +620,19 @@ class Onedrive {
                     return message($html, $title, 201);
                 } else {
                     savecache('access_token', $ret['access_token'], $this->disktag, $ret['expires_in'] - 60);
-                    $str .= '
-                <meta http-equiv="refresh" content="3;URL=' . $url . '?AddDisk=' . get_class($this) . '&disktag=' . $_GET['disktag'] . '&SelectDrive">';
-                    return message($str, getconstStr('Wait') . ' 3s', 201);
+                    $html .= '<script>
+                    var i = 0;
+                    var status = "' . $response['DplStatus'] . '";
+                var uploadList = setInterval(function(){
+                    if (document.getElementById("dis").style.display=="none") {
+                        console.log(i++);
+                    } else {
+                        clearInterval(uploadList);
+                        location.href = "' . $url . '?AddDisk=' . get_class($this) . '&disktag=' . $_GET['disktag'] . '&SelectDrive";
+                    }
+                }, 1000);
+                </script>';
+                    return message($html, getconstStr('Wait') . ' 3s', 201, 1);
                 }
             }
             return message('<pre>' . json_encode(json_decode($tmp['body']), JSON_PRETTY_PRINT) . '</pre>', $tmp['stat']);
@@ -636,7 +662,7 @@ class Onedrive {
                 $f = substr($_POST['disktag_add'], 0, 1);
                 if (strlen($_POST['disktag_add'])==1) $_POST['disktag_add'] .= '_';
                 if (isCommonEnv($_POST['disktag_add'])) {
-                    return message('Do not input ' . $envs . '<br><button onclick="location.href = location.href;">'.getconstStr('Refresh').'</button>', 'Error', 201);
+                    return message('Do not input ' . $envs . '<br><button onclick="location.href = location.href;">'.getconstStr('Refresh').'</button>', 'Error', 400);
                 } elseif (!(('a'<=$f && $f<='z') || ('A'<=$f && $f<='Z'))) {
                     return message('Please start with letters<br><button onclick="location.href = location.href;">'.getconstStr('Refresh').'</button>
                     <script>
@@ -644,7 +670,7 @@ class Onedrive {
                     expd.setTime(expd.getTime()+1);
                     var expires = "expires="+expd.toGMTString();
                     document.cookie=\'disktag=; path=/; \'+expires;
-                    </script>', 'Error', 201);
+                    </script>', 'Error', 400);
                 }
 
                 $tmp = null;
@@ -670,12 +696,26 @@ class Onedrive {
                 if (api_error($response)) {
                     $html = api_error_msg($response);
                     $title = 'Error';
+                    return message($html, $title, 400);
                 } else {
                     $title = getconstStr('MayinEnv');
-                    $html = getconstStr('Wait') . ' 3s<meta http-equiv="refresh" content="3;URL=' . $url . '?install1&disktag=' . $_GET['disktag'] . '&AddDisk=' . $_POST['Drive_ver'] . '">';
-                    if ($_POST['Drive_ver']=='Sharelink') $html = getconstStr('Wait') . ' 3s<meta http-equiv="refresh" content="3;URL=' . $url . '">';
+                    $html = getconstStr('Wait');
+                    if ($_POST['Drive_ver']!='Sharelink') $url .= '?install1&disktag=' . $_GET['disktag'] . '&AddDisk=' . $_POST['Drive_ver'];
+                    $html .= '<script>
+                    var i = 0;
+                    var status = "' . $response['DplStatus'] . '";
+                var uploadList = setInterval(function(){
+                    if (document.getElementById("dis").style.display=="none") {
+                        console.log(i++);
+                    } else {
+                        clearInterval(uploadList);
+                        location.href = "' . $url . '";
+                    }
+                }, 1000);
+                </script>';
+                    return message($html, $title, 201, 1);
                 }
-                return message($html, $title, 201);
+                
             }
         }
 
@@ -928,7 +968,7 @@ class Onedrive {
         return $diskSpace;
     }
 
-    protected function MSAPI($method, $path, $data = '')
+    protected function MSAPI($method, $path, $data = '', $headers = [])
     {
         $activeLimit = getConfig('activeLimit', $this->disktag);
         if ($activeLimit!='') {
@@ -946,11 +986,16 @@ class Onedrive {
             $url = $this->api_url . $this->ext_api_url;
             if ($path=='' or $path=='/') {
                 $url .= '/';
+            } elseif (substr($path, 0, 6)=="/items") {
+                $url = substr($url, 0, -5);
+                $url .= $path;
             } else {
                 $url .= ':' . $path;
                 if (substr($url,-1)=='/') $url=substr($url,0,-1);
             }
-            if ($method=='PUT') {
+            if ($method=='GET') {
+                $method = 'GET'; // do nothing
+            } elseif ($method=='PUT') {
                 if ($path=='' or $path=='/') {
                     $url .= 'content';
                 } else {
@@ -966,6 +1011,8 @@ class Onedrive {
             } else {
                 if ($path=='' or $path=='/') {
                     $url .= $method;
+                } elseif (substr($path, 0, 6)=="/items") {
+                    $url .= '/' . $method;
                 } else {
                     $url .= ':/' . $method;
                 }

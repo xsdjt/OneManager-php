@@ -50,6 +50,7 @@ function GetPathSetting($event, $context)
     $_SERVER['host'] = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
     $_SERVER['referhost'] = explode('/', $event['headers']['Referer'])[2];
     $_SERVER['HTTP_TRANSLATE'] = $event['headers']['translate'];//'f'
+    $_SERVER['HTTP_IF_MODIFIED_SINCE'] = $event['headers']['If-Modified-Since'];
     $_SERVER['BCE_CFC_RUNTIME_NAME'] = 'php7';
     return $path;
 }
@@ -363,7 +364,7 @@ function api_error_msg($response)
 {
     if (isset($response['code'])) $html = $response['code'] . '<br>
 ' . $response['message'];
-    else $html = var_dump($response);
+    else $html = json_encode($response, JSON_PRETTY_PRINT);
     return $html . '<br><br>
 BRN: ' . $_SERVER['functionBrn'] . '<br>
 <button onclick="location.href = location.href;">'.getconstStr('Refresh').'</button>';
@@ -430,4 +431,8 @@ function addFileToZip($zip, $rootpath, $path = '')
         }
     }
     @closedir($path);
+}
+
+function WaitFunction() {
+    return true;
 }
